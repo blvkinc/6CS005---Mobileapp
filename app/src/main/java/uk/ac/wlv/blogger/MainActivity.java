@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PICK_IMAGE = 101;
     private static final int REQUEST_CODE_CAMERA = 102;
     private String currentPhotoPath;
-
+    private Uri imageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
             File file = new File(currentPhotoPath);
             Uri imageUri = Uri.fromFile(file);
             imageView.setImageURI(imageUri);
+
         }
         if (requestCode == BLOG_DETAIL_REQUEST_CODE && resultCode == RESULT_OK) {
             displayBlogs();
@@ -351,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Uri imageUri;
+
 
     // Assuming you have a method to set the image URI
     public void setImageUri(Uri uri) {
@@ -359,20 +360,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showBlogDetails(int blogId, String blogName, String blogBody) {
-        // Retrieve the image URI from the intent extras
-        String imageUriString = getIntent().getStringExtra("imageUri");
+        // Assuming you have the imageUri instance variable available here
         // Start the BlogDetailActivity with intent and pass all necessary data
         Intent intent = new Intent(this, BlogDetailActivity.class);
         intent.putExtra("blogId", blogId);
         intent.putExtra("blogName", blogName);
         intent.putExtra("blogBody", blogBody);
         // Pass the image URI as a string if available
-        if (imageUriString != null) {
-            intent.putExtra("imageUri", imageUriString);
+        if (imageUri != null) {
+            intent.putExtra("imageUri", imageUri.toString());
         }
         startActivityForResult(intent, BLOG_DETAIL_REQUEST_CODE);
     }
-
 
     private void performSearch() {
         String searchQuery = searchEditText.getText().toString().trim();

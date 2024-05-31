@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,12 +51,14 @@ public class BlogDetailActivity extends AppCompatActivity {
         String blogBody = getIntent().getStringExtra("blogBody");
         String imageUriString = getIntent().getStringExtra("imageUri");
 
+        Log.d("BlogDetailActivity", "Received Image URI: " + imageUriString);
         // Set retrieved blog details to the UI components
         editBlogName.setText(blogName);
         editBlogBody.setText(blogBody);
 
         // Load and display image
         if (imageUriString != null) {
+
             Uri imageUri = Uri.parse(imageUriString);
             loadImage(imageUri);
         }
