@@ -3,17 +3,25 @@ package uk.ac.wlv.blogger;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class BlogDetailActivity extends AppCompatActivity {
 
     private EditText editBlogName, editBlogBody;
+    private ImageView blogImage;
     private Button saveBtn, deleteBtn, goBackBtn, shareBtn, emailBtn;
     private SQLiteDatabase db;
     private int blogId;
@@ -26,6 +34,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         // Initialize UI components
         editBlogName = findViewById(R.id.editBlogName);
         editBlogBody = findViewById(R.id.editBlogBody);
+        blogImage = findViewById(R.id.blogImage);
         saveBtn = findViewById(R.id.saveBtn);
         deleteBtn = findViewById(R.id.deleteBtn);
         goBackBtn = findViewById(R.id.goBackBtn);
@@ -39,10 +48,17 @@ public class BlogDetailActivity extends AppCompatActivity {
         blogId = getIntent().getIntExtra("blogId", -1);
         String blogName = getIntent().getStringExtra("blogName");
         String blogBody = getIntent().getStringExtra("blogBody");
+        String imageUriString = getIntent().getStringExtra("imageUri");
 
         // Set retrieved blog details to the UI components
         editBlogName.setText(blogName);
         editBlogBody.setText(blogBody);
+
+        // Load and display image
+        if (imageUriString != null) {
+            Uri imageUri = Uri.parse(imageUriString);
+            loadImage(imageUri);
+        }
 
         // Set click listener for the 'Save' button
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +101,16 @@ public class BlogDetailActivity extends AppCompatActivity {
                 shareBlogViaEmail();
             }
         });
+    }
+
+    private void loadImage(Uri imageUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            blogImage.setImageBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void saveBlogChanges() {
@@ -145,7 +171,6 @@ public class BlogDetailActivity extends AppCompatActivity {
     private void shareBlogViaEmail() {
         String blogName = editBlogName.getText().toString().trim();
         String blogBody = editBlogBody.getText().toString().trim();
-
         if (blogName.isEmpty() || blogBody.isEmpty()) {
             Toast.makeText(this, "Blog details are empty", Toast.LENGTH_SHORT).show();
             return;

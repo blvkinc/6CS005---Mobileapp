@@ -351,13 +351,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private Uri imageUri;
+
+    // Assuming you have a method to set the image URI
+    public void setImageUri(Uri uri) {
+        this.imageUri = uri;
+    }
+
     private void showBlogDetails(int blogId, String blogName, String blogBody) {
+        // Retrieve the image URI from the intent extras
+        String imageUriString = getIntent().getStringExtra("imageUri");
+        // Start the BlogDetailActivity with intent and pass all necessary data
         Intent intent = new Intent(this, BlogDetailActivity.class);
         intent.putExtra("blogId", blogId);
         intent.putExtra("blogName", blogName);
         intent.putExtra("blogBody", blogBody);
+        // Pass the image URI as a string if available
+        if (imageUriString != null) {
+            intent.putExtra("imageUri", imageUriString);
+        }
         startActivityForResult(intent, BLOG_DETAIL_REQUEST_CODE);
     }
+
 
     private void performSearch() {
         String searchQuery = searchEditText.getText().toString().trim();
