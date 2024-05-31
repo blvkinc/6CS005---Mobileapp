@@ -16,8 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/default_image" /> <!-- Set a default image or use srcCompat -->
+            android:scaleType="centerCrop" />
 
         <EditText
             android:id="@+id/editBlogName"
